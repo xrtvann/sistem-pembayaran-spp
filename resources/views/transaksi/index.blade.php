@@ -12,38 +12,38 @@
             <p><strong>Sisa:</strong> Rp{{ number_format($sisa, 0, ',', '.') }}</p>
         </div>
 
-    
-    <a href="{{ route('transaksi.create', $siswa->nis) }}"
-        class="mb-4 inline-block bg-green-600 text-white px-4 py-2 rounded">+ Tambah Pembayaran</a>
 
-    <div class="bg-white shadow rounded p-4">
-        <h2 class="text-lg font-semibold mb-2">Riwayat Transaksi</h2>
+        <a href="{{ route('transaksi.create', $siswa->nis) }}"
+            class="mb-4 inline-block bg-green-600 text-white px-4 py-2 rounded">+ Tambah Pembayaran</a>
 
-        @if ($transaksi->isEmpty())
-            <p class="text-gray-600">Belum ada transaksi.</p>
-        @else
-            <table class="min-w-full text-sm border">
-                <thead>
-                    <tr class="bg-gray-200">
-                        <th class="border px-2 py-1">Tanggal</th>
-                        <th class="border px-2 py-1">Jumlah Bayar</th>
-                        <th class="border px-2 py-1">Sisa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($transaksi as $item)
-                        <tr>
-                            <td class="border px-2 py-1">{{ $item->tanggal_bayar }}</td>
-                            <td class="border px-2 py-1">Rp{{ number_format($item->total_bayar, 0, ',', '.') }}</td>
-                            <td class="border px-2 py-1">
-                                Rp{{ number_format($totalSpp - $transaksi->where('id', '<=', $item->id)->sum('total_bayar'), 0, ',', '.') }}
-                            </td>
+        <div class="bg-white shadow rounded p-4">
+            <h2 class="text-lg font-semibold mb-2">Riwayat Transaksi</h2>
 
+            @if ($transaksi->isEmpty())
+                <p class="text-gray-600">Belum ada transaksi.</p>
+            @else
+                <table class="min-w-full text-sm border">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border px-2 py-1">Tanggal</th>
+                            <th class="border px-2 py-1">Jumlah Bayar</th>
+                            <th class="border px-2 py-1">Sisa</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+                    </thead>
+                    <tbody>
+                        @foreach ($transaksi as $item)
+                            <tr>
+                                <td class="border px-2 py-1">{{ $item->tanggal_bayar }}</td>
+                                <td class="border px-2 py-1">Rp{{ number_format($item->total_bayar, 0, ',', '.') }}</td>
+                                <td class="border px-2 py-1">
+                                    Rp{{ number_format($totalSpp - $transaksi->where('id', '<=', $item->id)->sum('total_bayar'), 0, ',', '.') }}
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @endif
+        </div>
     </div>
 @endsection

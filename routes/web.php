@@ -13,7 +13,7 @@ use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 
 // Redirect root ke dashboard jika sudah login
-
+Route::redirect('/', '/login');
 
 // Routes Login/Register
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

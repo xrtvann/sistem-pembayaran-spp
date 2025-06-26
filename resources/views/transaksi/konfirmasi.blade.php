@@ -30,6 +30,7 @@
                         <th class="border px-4 py-2 text-left">Sisa</th>
                         <th class="border px-4 py-2 text-left">Tanggal Bayar</th>
                         <th class="border px-4 py-2 text-left">Status</th>
+                        <th class="border px-4 py-2 text-left">Bukti</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +69,14 @@
                                         </option>
                                     </select>
                                 </form>
+                            </td>
+                            <td>
+                                @if ($item->bukti_pembayaran)
+                                    <img src="{{ asset($item->bukti_pembayaran) }}" alt="Bukti"
+                                        class="w-24 rounded shadow">
+                                @else
+                                    <span class="text-gray-400 italic">Belum upload</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

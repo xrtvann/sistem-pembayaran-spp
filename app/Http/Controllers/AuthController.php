@@ -21,6 +21,7 @@ class AuthController extends Controller
 
         // ==== LOGIN SISWA ====
         if ($tipe === 'siswa') {
+
             $request->validate([
                 'nisn'     => 'required',
                 'password' => 'required',
@@ -49,19 +50,22 @@ class AuthController extends Controller
 
         // ==== LOGIN ADMIN / PETUGAS ====
         if ($tipe === 'admin') {
+            // dd($request->all());
             $request->validate([
                 'email'    => 'required|email',
                 'password' => 'required',
             ]);
 
-            // ✅ Pastikan tidak ada sesi siswa aktif
+            
             $request->session()->forget('siswa');
 
             $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
+
                 return redirect()->intended('/dashboard');
             }
+
 
             return back()->withErrors(['email' => 'Email atau password salah']);
         }

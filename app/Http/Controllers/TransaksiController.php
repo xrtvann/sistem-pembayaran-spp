@@ -32,7 +32,8 @@ class TransaksiController extends Controller
                 'transaksi.total_bayar',
                 'transaksi.sisa',
                 'transaksi.status',
-                'transaksi.tanggal_bayar'
+                'transaksi.tanggal_bayar',
+                'transaksi.bukti_pembayaran'
             )
             ->where('transaksi.status', 'pending')
             ->orderBy('transaksi.tanggal_bayar', 'desc')
@@ -101,6 +102,7 @@ class TransaksiController extends Controller
                 'sisa'
             ));
         }
+
         $transaksi = DB::table('transaksi')
             ->join('siswa', 'transaksi.siswa_id', '=', 'siswa.id')
             ->join('pembagian_spp', 'transaksi.id_pembagian', '=', 'pembagian_spp.id_pembagian')
@@ -141,6 +143,7 @@ class TransaksiController extends Controller
             'id_pembagian' => 'required|exists:pembagian_spp,id_pembagian',
             'total_bayar' => 'required|integer|min:0',
             'tanggal_bayar' => 'required|date',
+            'bukti_pembayaran' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $status = session()->has('siswa') ? 'pending' : 'sukses';
@@ -148,6 +151,15 @@ class TransaksiController extends Controller
         $pembagian = PembagianSpp::with('spp')->findOrFail($request->id_pembagian);
         $jumlahTagihan = $pembagian->spp->nominal;
         $sisa = $jumlahTagihan - $request->total_bayar;
+
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '_' . $file->getClientOriginalName(); // biar unik
+            $file->move(public_path('images'), $filename); // simpan ke public/images
+            $buktiPath = 'images/' . $filename;
+        } else {
+            $buktiPath = null;
+        }
 
         Transaksi::create([
             'siswa_id' => $request->siswa_id,
@@ -157,6 +169,7 @@ class TransaksiController extends Controller
             'sisa' => $sisa,
             'status' => $status,
             'tanggal_bayar' => $request->tanggal_bayar,
+            'bukti_pembayaran' => $buktiPath,
         ]);
 
         return redirect()->route('transaksi.index', ['nis' => $pembagian->siswa->nis])

@@ -40,7 +40,9 @@ class SiswaController extends Controller
 
     public function show(Siswa $siswa)
     {
-        return view('siswa.show', compact('siswa'));
+        $nis = $siswa->nis;
+        $nisn = $siswa->nisn;
+        return view('siswa.show', compact('siswa', 'nisn', 'nis'));
     }
 
     public function edit(Siswa $siswa)

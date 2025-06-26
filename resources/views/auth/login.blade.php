@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -11,11 +12,12 @@
         }
     </script>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-96">
         <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
 
-        @if($errors->any())
+        @if ($errors->any())
             <div class="bg-red-100 text-red-600 p-3 rounded mb-4">
                 {{ $errors->first() }}
             </div>
@@ -56,7 +58,9 @@
             <button type="submit" class="w-full bg-green-500 text-white p-2 rounded">Login Siswa</button>
         </form>
 
-        <p class="mt-4 text-center text-sm">Belum punya akun? <a href="/register" class="text-blue-600">Daftar</a></p>
+        <p class="mt-4 text-center text-sm">Belum punya akun? <a href="{{ route('register') }}"
+                class="text-blue-600">Daftar</a></p>
     </div>
 </body>
+
 </html>
