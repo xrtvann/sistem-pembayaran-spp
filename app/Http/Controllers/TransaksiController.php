@@ -63,6 +63,19 @@ class TransaksiController extends Controller
         return view('transaksi.index2', compact('transaksi'));
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,sukses',
+        ]);
+
+        DB::table('transaksi')
+            ->where('id_transaksi', $id)
+            ->update(['status' => $request->status]);
+
+        return back()->with('success', 'Status transaksi berhasil diperbarui.');
+    }
+
     // TAMPILKAN DATA TRANSAKSI BERDASARKAN NIS
     public function index(Request $request)
     {

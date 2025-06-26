@@ -29,6 +29,7 @@
                         <th class="border px-4 py-2 text-left">Jumlah Bayar</th>
                         <th class="border px-4 py-2 text-left">Sisa</th>
                         <th class="border px-4 py-2 text-left">Tanggal Bayar</th>
+                        <th class="border px-4 py-2 text-left">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,19 @@
                             </td>
                             <td class="border px-4 py-2">
                                 {{ $item->tanggal_bayar }}
+                            </td>
+                            <td>
+                                <form action="{{ route('transaksi.updateStatus', $item->id_transaksi) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <select name="status" onchange="this.form.submit()"
+                                        class="border border-gray-300 rounded px-2 py-1 bg-white text-sm">
+                                        <option value="pending" {{ $item->status === 'pending' ? 'selected' : '' }}>Pending
+                                        </option>
+                                        <option value="sukses" {{ $item->status === 'sukses' ? 'selected' : '' }}>Sukses
+                                        </option>
+                                    </select>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

@@ -57,6 +57,7 @@ Route::middleware(['universal.auth'])->group(function () {
 
 
     Route::get('/transaksi', [TransaksiController::class, 'index2'])->name('transaksi');
+    Route::put('/transaksi/update-status/{id}', [TransaksiController::class, 'updateStatus'])->name('transaksi.updateStatus');
     Route::get('/transaksi/cari', [TransaksiController::class, 'formCari'])->name('transaksi.cari');
     Route::get('/transaksi/konfrimasi', [TransaksiController::class, 'konfirmasiPembayaran'])->name('transaksi.konfirmasi');
     Route::get('/transaksi/detail', [TransaksiController::class, 'index'])->name('transaksi.index');
