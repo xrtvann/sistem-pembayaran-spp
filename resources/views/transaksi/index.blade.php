@@ -12,7 +12,7 @@
             <p><strong>Sisa:</strong> Rp{{ number_format($sisa, 0, ',', '.') }}</p>
         </div>
 
-    <
+    
     <a href="{{ route('transaksi.create', $siswa->nis) }}"
         class="mb-4 inline-block bg-green-600 text-white px-4 py-2 rounded">+ Tambah Pembayaran</a>
 

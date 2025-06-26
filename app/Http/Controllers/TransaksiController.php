@@ -76,27 +76,53 @@ class TransaksiController extends Controller
         return back()->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
-    // TAMPILKAN DATA TRANSAKSI BERDASARKAN NIS
     public function index(Request $request)
     {
-        $request->validate(['nis' => 'required']);
-        $siswa = Siswa::where('nis', $request->nis)->firstOrFail();
+        // Cek apakah login sebagai siswa
+        if (session()->has('siswa')) {
+            $siswa = session('siswa');
+            $siswa = Siswa::where('nis', $siswa->nis)->firstOrFail();
 
-        // Ambil pembagian spp siswa
-        $pembagian = PembagianSpp::with(['kelas', 'spp'])
-            ->where('siswa_id', $siswa->id)
-            ->first();
+            $pembagian = PembagianSpp::with(['kelas', 'spp'])
+                ->where('siswa_id', $siswa->id)
+                ->first();
 
-        // Ambil semua transaksi
-        $transaksi = Transaksi::where('siswa_id', $siswa->id)->get();
+            $transaksi = Transaksi::where('siswa_id', $siswa->id)->get();
+            $totalSpp = $pembagian?->spp?->nominal ?? 0;
+            $totalBayar = $transaksi->sum('total_bayar');
+            $sisa = $totalSpp - $totalBayar;
 
-        // Hitung total bayar dan sisa
-        $totalSpp = $pembagian?->spp?->nominal ?? 0;
-        $totalBayar = $transaksi->sum('total_bayar');
-        $sisa = $totalSpp - $totalBayar;
-
-        return view('transaksi.index', compact('siswa', 'pembagian', 'transaksi', 'totalSpp', 'totalBayar', 'sisa'));
+            return view('transaksi.index', compact(
+                'siswa',
+                'pembagian',
+                'transaksi',
+                'totalSpp',
+                'totalBayar',
+                'sisa'
+            ));
+        }
+        $transaksi = DB::table('transaksi')
+            ->join('siswa', 'transaksi.siswa_id', '=', 'siswa.id')
+            ->join('pembagian_spp', 'transaksi.id_pembagian', '=', 'pembagian_spp.id_pembagian')
+            ->join('kelas', 'pembagian_spp.id_kelas', '=', 'kelas.id_kelas')
+            ->select(
+                'transaksi.id_transaksi',
+                'siswa.nisn',
+                'siswa.nis',
+                'siswa.nama as nama_siswa',
+                'kelas.nama_kelas',
+                'transaksi.jumlah_tagihan',
+                'transaksi.total_bayar',
+                'transaksi.sisa',
+                'transaksi.status',
+                'transaksi.tanggal_bayar'
+            )
+            ->where('transaksi.status', 'sukses')
+            ->orderBy('transaksi.tanggal_bayar', 'desc')
+            ->get();
+        return view('transaksi.index2', compact('transaksi'));
     }
+
 
     // TAMPILKAN FORM TAMBAH TRANSAKSI
     public function create($nis)
